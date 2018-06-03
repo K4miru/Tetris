@@ -1,25 +1,25 @@
 var canvas, ctx;
-var squareSize = 50;
+const squareSize = 50;
 var selectedBlock, nextBlock;
-var sideCollision = -2;
-var bottomCollision = 0; //0-6 - index of block
-var neutralNumber = -1;
+const sideCollision = -2;
+const bottomCollision = 0; //0-6 - index of block
+const neutralNumber = -1;
 
-var vectors = [
-    [new _Vector(100, -50), new _Vector(150, -50), new _Vector(150, -100), new _Vector(200, -100)],
-    [new _Vector(100, -50), new _Vector(150, -50), new _Vector(200, -50), new _Vector(250, -50)],
-    [new _Vector(100, -50), new _Vector(150, -50), new _Vector(100, -100), new _Vector(150, -100)],
-    [new _Vector(100, -50), new _Vector(150, -50), new _Vector(200, -50), new _Vector(100, -100)],
-    [new _Vector(100, -50), new _Vector(150, -50), new _Vector(200, -50), new _Vector(200, -100)],
-    [new _Vector(100, -50), new _Vector(150, -50), new _Vector(200, -50), new _Vector(150, -100)],
-    [new _Vector(100, -100), new _Vector(150, -100), new _Vector(150, -50), new _Vector(200, -50)]
+const vectors = [
+    [new Vector(100, -50), new Vector(150, -50), new Vector(150, -100), new Vector(200, -100)],
+    [new Vector(100, -50), new Vector(150, -50), new Vector(200, -50), new Vector(250, -50)],
+    [new Vector(100, -50), new Vector(150, -50), new Vector(100, -100), new Vector(150, -100)],
+    [new Vector(100, -50), new Vector(150, -50), new Vector(200, -50), new Vector(100, -100)],
+    [new Vector(100, -50), new Vector(150, -50), new Vector(200, -50), new Vector(200, -100)],
+    [new Vector(100, -50), new Vector(150, -50), new Vector(200, -50), new Vector(150, -100)],
+    [new Vector(100, -100), new Vector(150, -100), new Vector(150, -50), new Vector(200, -50)]
 ]
 var board = [];
 var score = 0;
-var addScore = 100;
+const addScore = 100;
 var gameInterval;
 
-var image = [
+var images = [
     new Image(),
     new Image(),
     new Image(),
@@ -29,64 +29,63 @@ var image = [
     new Image()
 ]
 
-image[0].src = "images/square0.png";
-image[1].src = "images/square1.png";
-image[2].src = "images/square2.png";
-image[3].src = "images/square3.png";
-image[4].src = "images/square4.png";
-image[5].src = "images/square5.png";
-image[6].src = "images/square6.png";
+images[0].src = "images/square0.png";
+images[1].src = "images/square1.png";
+images[2].src = "images/square2.png";
+images[3].src = "images/square3.png";
+images[4].src = "images/square4.png";
+images[5].src = "images/square5.png";
+images[6].src = "images/square6.png";
 
-function Control(e) {
-    var moveVector = new _Vector(0,0); 
-    //console.log(e.keyCode);
+function control(e) {
+    var moveVector = new Vector(0,0); 
     switch(e.keyCode) {
         case 87:
         case 38:
-            Rotate();
+            rotate();
             break;
         case 68:
         case 39:
-            moveVector.SetX(1); //move right
+            moveVector.setX(1); //move right
             break;
         case 65:
         case 37:
-            moveVector.SetX(-1); //move left
+            moveVector.setX(-1); //move left
             break;
         case 83:
         case 40:
-            moveVector.SetY(1); //move down
+            moveVector.setY(1); //move down
             break;
     }
-    Move(moveVector.GetX(), moveVector.GetY());
+    move(moveVector.getX(), moveVector.getY());
 }
 
-function Rotate() {
-    selectedBlock.Rotate(90);
-    DrawOnCanvas();
+function rotate() {
+    selectedBlock.rotate(90);
+    drawOnCanvas();
 }
 
-function Move(side, down) {
-    if (!selectedBlock.IsCollidingWithBottom()) {
-        if (side != 0 && selectedBlock.IsCollidingWithSide(side))
+function move(side, down) {
+    if (!selectedBlock.isCollidingWithBottom()) {
+        if (side != 0 && selectedBlock.isCollidingWithSide(side))
             side = 0; //prevent moving outside box
-        selectedBlock.Move(side * squareSize, down * squareSize);
-        DrawOnCanvas();
+        selectedBlock.move(side * squareSize, down * squareSize);
+        drawOnCanvas();
     } else {
-        StopBlock();
+        stopBlock();
     }
 }
 
-function StopBlock() {
-    selectedBlock.Stop();
-    CheckCanvas();
-    var index = nextBlock.GetIndex();
-    selectedBlock = new _Block(vectors[index], image[index], index);
-    nextBlock = RandomBlock();
-    nextBlock.Move(400, 250);
+function stopBlock() {
+    selectedBlock.stop();
+    checkCanvas();
+    var index = nextBlock.getIndex();
+    selectedBlock = new Block(vectors[index], images[index], index);
+    nextBlock = randomBlock();
+    nextBlock.move(400, 250); //move block to preview next one on the right side
 }
 
-function DrawOnCanvas() {
+function drawOnCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     //Separate canvas
@@ -95,26 +94,26 @@ function DrawOnCanvas() {
     ctx.lineTo(400, canvas.height);
     ctx.stroke();
 
-    DrawScore();
+    drawScore();
 
     //Draw blocks
-    selectedBlock.Draw();
-    nextBlock.Draw();
+    selectedBlock.draw();
+    nextBlock.draw();
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[i].length; j++) {
             var valueOnBoard = board[i][j];
             if (valueOnBoard > neutralNumber)
-                ctx.drawImage(image[valueOnBoard], (i - 1) * squareSize, j * squareSize, squareSize, squareSize);
+                ctx.drawImage(images[valueOnBoard], (i - 1) * squareSize, j * squareSize, squareSize, squareSize);
         }
     }
 }
 
-function DrawScore() {
+function drawScore() {
     ctx.font = "50px Georgia";
     ctx.fillText(score, 500, 75);
 }
 
-function CheckCanvas() {
+function checkCanvas() {
     for (var i = 0; i < 12; i++) {
         var lines = 0;
         for (var j = 1; j < 9; j++) {
@@ -132,23 +131,23 @@ function CheckCanvas() {
 
     for (var j = 1; j < 9; j++) {
         if (board[j][0] > neutralNumber)
-            StopGame();
+            stopGame();
     }
 }
 
-function StopGame() {
+function stopGame() {
     clearInterval(gameInterval);
     ctx.font = "40px Georgia";
     ctx.fillText("GAME OVER", 450, 500);
-    document.removeEventListener("keydown", Control, false);
+    document.removeEventListener("keydown", control, false);
 }
 
-function RandomBlock() {
+function randomBlock() {
     var index = Math.floor(Math.random() * vectors.length);
-    return new _Block(vectors[index], image[index], index);
+    return new Block(vectors[index], images[index], index);
 }
 
-function PrepareBoard() {
+function prepareBoard() {
     board = new Array(10);
     for (var i = 0; i < board.length; i++) {
         board[i] = new Array(13);
@@ -165,30 +164,30 @@ function PrepareBoard() {
     }
 }
 
-function Init() {
+function init() {
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     
-    PrepareBoard();
+    prepareBoard();
 
-    selectedBlock = RandomBlock();
-    nextBlock = RandomBlock();
-    nextBlock.Move(8 * squareSize, 5 * squareSize);
-    DrawOnCanvas();
+    selectedBlock = randomBlock();
+    nextBlock = randomBlock();
+    nextBlock.move(8 * squareSize, 5 * squareSize);
+    drawOnCanvas();
 
     ctx.font = "30px Georgia";
     ctx.fillText("PRESS ANY KEY", 450, 500);
 
-    document.addEventListener("keydown", Tetris, false);
+    document.addEventListener("keydown", tetris, false);
 }
 
-function Tetris() {
-    document.removeEventListener("keydown", Tetris, false);
-    document.addEventListener("keydown", Control, false);
+function tetris() {
+    document.removeEventListener("keydown", tetris, false);
+    document.addEventListener("keydown", control, false);
 
     //Falling Down
     gameInterval = setInterval(function () {
-        var vectorDown = new _Vector(0, 1);
-        Move(vectorDown.GetX(), vectorDown.GetY());
+        var vectorDown = new Vector(0, 1);
+        move(vectorDown.getX(), vectorDown.getY());
     }, 1000);
 }
