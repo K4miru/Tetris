@@ -1,22 +1,22 @@
 function Square(vector) {
-    this.position = new Vector(0, 0);
-    this.image;
-    this.index;
+    var position = new Vector(0, 0);
+    var image;
+    var index;
 
     this.draw = function () {
-        ctx.drawImage(this.image, this.position.getX(), this.position.getY(), squareSize, squareSize);
+        ctx.drawImage(image, position.getX(), position.getY(), squareSize, squareSize);
     }
 
     this.setPosition = function (x, y) {
-        this.position.setPosition(x, y);
+        position.setPosition(x, y);
     }
 
     this.getX = function () {
-        return this.position.getX();
+        return position.getX();
     }
 
     this.getY = function () {
-        return this.position.getY();
+        return position.getY();
     }
 
     this.getIndexX = function () {
@@ -28,11 +28,11 @@ function Square(vector) {
     }
 
     this.rotate = function (angle, rotatePoint) {
-        this.position.rotate(angle, rotatePoint);
+        position.rotate(angle, rotatePoint);
     }
 
     this.isRotating = function (angle, rotatePoint) {
-        var positionAfterRotation = this.position.simulateRotation(angle, rotatePoint);
+        var positionAfterRotation = position.simulateRotation(angle, rotatePoint);
         var x = positionAfterRotation.getX() / squareSize;
         var y = positionAfterRotation.getY() / squareSize;
         if (x > 0 && x < 8 && y < 12 && board[x][y] < bottomCollision) //playable boar is from 1 to 8 for x and to 12 for y;
@@ -59,13 +59,13 @@ function Square(vector) {
     this.changeValueOnBoard = function () {
         var x = this.getIndexX();
         var y = this.getIndexY();
-        board[x][y] = this.index;
+        board[x][y] = index;
     }
 
-    this.init = function (vector, image, index) {
+    this.init = function (vector, setImage, setIndex) {
         this.setPosition(vector.getX(), vector.getY());
-        this.image = image;
-        this.index = index;
+        image = setImage;
+        index = setIndex;
     }
 
 }

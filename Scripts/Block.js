@@ -1,12 +1,12 @@
-function Block(vectors, image, index) {
+function Block(vectors, image, setIndex) {
 
     var squares = [new Square(), new Square(), new Square(), new Square()];
     var minPoint = new Vector(0, 0);
     var maxPoint = new Vector(0, 0);
-    this.index = index;
+    var index = setIndex;
 
     this.getIndex = function () {
-        return this.index;
+        return index;
     }
 
     this.draw = function () {
@@ -22,7 +22,7 @@ function Block(vectors, image, index) {
         this.draw();
     }
 
-    this.getBoundary = function () {
+    var getBoundary = function () {
         var minX = canvas.width;
         var maxX = 0;
         var minY = canvas.height;
@@ -48,8 +48,8 @@ function Block(vectors, image, index) {
         maxPoint.setPosition(maxX, maxY);
     }
 
-    this.getRotatePoint = function () {
-        this.getBoundary();
+    var getRotatePoint = function () {
+        getBoundary();
         var rotateX = (maxPoint.getX() + squareSize - minPoint.getX()) / 2;
         var rotateY = (maxPoint.getY() + squareSize - minPoint.getY()) / 2;
         return new Vector(minPoint.getX() + rotateX, minPoint.getY() + rotateY);
@@ -78,7 +78,7 @@ function Block(vectors, image, index) {
     }
 
     this.rotate = function (angle) {
-        var rotatePoint = this.getRotatePoint();
+        var rotatePoint = getRotatePoint();
 
         for (var i = 0; i < squares.length; i++) {
             if (!squares[i].isRotating(angle, rotatePoint)) {
@@ -100,5 +100,4 @@ function Block(vectors, image, index) {
     }
 
     this.init();
-
 }
