@@ -1,22 +1,22 @@
 
-function Vector(x, y) {
-    this.x = x;
-    this.y = y;
+function Vector(setX, setY) {
+    var x = setX;
+    var y = setY;
 
-    this.setX = function (x) {
-        this.x = x;
+    this.setX = function (setX) {
+        x = setX;
     }
 
-    this.setY = function (y) {
-        this.y = y;
+    this.setY = function (setY) {
+        y = setY;
     }
 
     this.getX = function () {
-        return this.x;
+        return x;
     }
 
     this.getY = function () {
-        return this.y;
+        return y;
     }
 
     this.setPosition = function (x, y) {
@@ -28,25 +28,25 @@ function Vector(x, y) {
         angle = angle * (Math.PI / 180);
         var halfSquareSize = squareSize / 2;
 
-        
-        var translateX = this.x - rotatePoint.x + halfSquareSize;
-        var translateY = this.y - rotatePoint.y + halfSquareSize;
 
-        var x = translateX * Math.cos(angle) - translateY * Math.sin(angle);
-        var y = translateX * Math.sin(angle) + translateY * Math.cos(angle);
+        var translateX = x - rotatePoint.getX() + halfSquareSize;
+        var translateY = y - rotatePoint.getY() + halfSquareSize;
 
-        x = x + rotatePoint.x - halfSquareSize;
-        y = y + rotatePoint.y - halfSquareSize;
+        var probablyX = translateX * Math.cos(angle) - translateY * Math.sin(angle);
+        var probablyY = translateX * Math.sin(angle) + translateY * Math.cos(angle);
 
-        x = Math.round(x / squareSize) * squareSize;
-        y = Math.round(y / squareSize) * squareSize;
+        probablyX = probablyX + rotatePoint.getX()- halfSquareSize;
+        probablyY = probablyY + rotatePoint.getY()- halfSquareSize;
 
-        return new Vector(x, y);
+        probablyX = Math.round(probablyX / squareSize) * squareSize;
+        probablyY = Math.round(probablyY / squareSize) * squareSize;
+
+        return new Vector(probablyX, probablyY);
     }
 
     this.rotate = function (angle, rotatePoint) {
         var positionAfterRotation = this.simulateRotation(angle, rotatePoint);
 
-        this.setPosition(positionAfterRotation.x, positionAfterRotation.y);
+        this.setPosition(positionAfterRotation.getX(), positionAfterRotation.getY());
     }
 }

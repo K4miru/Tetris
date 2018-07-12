@@ -1,8 +1,8 @@
 function Block(vectors, image, index) {
 
-    this.squares = [new Square(), new Square(), new Square(), new Square()];
-    this.minPoint = new Vector(0, 0);
-    this.maxPoint = new Vector(0, 0);
+    var squares = [new Square(), new Square(), new Square(), new Square()];
+    var minPoint = new Vector(0, 0);
+    var maxPoint = new Vector(0, 0);
     this.index = index;
 
     this.getIndex = function () {
@@ -10,14 +10,14 @@ function Block(vectors, image, index) {
     }
 
     this.draw = function () {
-        for (var i = 0; i < this.squares.length; i++) {
-            this.squares[i].draw();
+        for (var i = 0; i < squares.length; i++) {
+            squares[i].draw();
         }
     }
 
     this.init = function () {
-        for (var i = 0; i < this.squares.length; i++) {
-            this.squares[i].init(vectors[i], image, index);
+        for (var i = 0; i < squares.length; i++) {
+            squares[i].init(vectors[i], image, index);
         }
         this.draw();
     }
@@ -29,8 +29,8 @@ function Block(vectors, image, index) {
         var maxY = 0;
 
         for (var i = 0; i < vectors.length; i++) {
-            var x = this.squares[i].getX();
-            var y = this.squares[i].getY();
+            var x = squares[i].getX();
+            var y = squares[i].getY();
             if (minX > x)
                 minX = x;
 
@@ -44,58 +44,58 @@ function Block(vectors, image, index) {
                 maxY = y;
         }
 
-        this.minPoint.setPosition(minX, minY);
-        this.maxPoint.setPosition(maxX, maxY);
+        minPoint.setPosition(minX, minY);
+        maxPoint.setPosition(maxX, maxY);
     }
 
     this.getRotatePoint = function () {
         this.getBoundary();
-        var rotateX = (this.maxPoint.getX() + squareSize - this.minPoint.getX()) / 2;
-        var rotateY = (this.maxPoint.getY() + squareSize - this.minPoint.getY()) / 2;
-        return new Vector(this.minPoint.getX() + rotateX, this.minPoint.getY() + rotateY);
+        var rotateX = (maxPoint.getX() + squareSize - minPoint.getX()) / 2;
+        var rotateY = (maxPoint.getY() + squareSize - minPoint.getY()) / 2;
+        return new Vector(minPoint.getX() + rotateX, minPoint.getY() + rotateY);
     }
 
     this.isCollidingWithBottom = function () {
-        for (var i = 0; i < this.squares.length; i++) {
-            if (this.squares[i].isCollidingWithBottom())
+        for (var i = 0; i < squares.length; i++) {
+            if (squares[i].isCollidingWithBottom())
                 return true;
         }
         return false;
     }
 
     this.isCollidingWithSide = function (side) {
-        for (var i = 0; i < this.squares.length; i++) {
-            if (this.squares[i].isCollidingWithSide(side))
+        for (var i = 0; i < squares.length; i++) {
+            if (squares[i].isCollidingWithSide(side))
                 return true;
         }
         return false;
     }
 
     this.stop = function () {
-        for (var i = 0; i < this.squares.length; i++) {
-            this.squares[i].changeValueOnBoard();
+        for (var i = 0; i < squares.length; i++) {
+            squares[i].changeValueOnBoard();
         }
     }
 
     this.rotate = function (angle) {
         var rotatePoint = this.getRotatePoint();
 
-        for (var i = 0; i < this.squares.length; i++) {
-            if (!this.squares[i].isRotating(angle, rotatePoint)) {
+        for (var i = 0; i < squares.length; i++) {
+            if (!squares[i].isRotating(angle, rotatePoint)) {
                 return;
             }
         }
 
-        for (var i = 0; i < this.squares.length; i++) {
-            this.squares[i].rotate(angle, rotatePoint);
+        for (var i = 0; i < squares.length; i++) {
+            squares[i].rotate(angle, rotatePoint);
         }
     }
 
     this.move = function (side, down) {
-        for (var i = 0; i < this.squares.length; i++) {
-            var x = this.squares[i].getX();
-            var y = this.squares[i].getY();
-            this.squares[i].setPosition(x + side, y + down);
+        for (var i = 0; i < squares.length; i++) {
+            var x = squares[i].getX();
+            var y = squares[i].getY();
+            squares[i].setPosition(x + side, y + down);
         }
     }
 

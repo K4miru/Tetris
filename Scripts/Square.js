@@ -4,7 +4,7 @@ function Square(vector) {
     this.index;
 
     this.draw = function () {
-        ctx.drawImage(this.image, this.position.x, this.position.y, squareSize, squareSize);
+        ctx.drawImage(this.image, this.position.getX(), this.position.getY(), squareSize, squareSize);
     }
 
     this.setPosition = function (x, y) {
@@ -33,8 +33,8 @@ function Square(vector) {
 
     this.isRotating = function (angle, rotatePoint) {
         var positionAfterRotation = this.position.simulateRotation(angle, rotatePoint);
-        var x = positionAfterRotation.x / squareSize;
-        var y = positionAfterRotation.y / squareSize;
+        var x = positionAfterRotation.getX() / squareSize;
+        var y = positionAfterRotation.getY() / squareSize;
         if (x > 0 && x < 8 && y < 12 && board[x][y] < bottomCollision) //playable boar is from 1 to 8 for x and to 12 for y;
             return true;
         return false;
@@ -63,7 +63,7 @@ function Square(vector) {
     }
 
     this.init = function (vector, image, index) {
-        this.setPosition(vector.x, vector.y);
+        this.setPosition(vector.getX(), vector.getY());
         this.image = image;
         this.index = index;
     }
